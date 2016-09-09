@@ -465,10 +465,10 @@ shinyServer(
         ### can change the ggplot to ggvis from here, for interactive ###
         gg3<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=Sample))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
-          gg3<-gg3+geom_line(aes(group=thisdata$Sample))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
+          gg3<-gg3+geom_line()+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
         else {
-          gg3<-gg3+geom_line(aes(group=thisdata$Sample))
+          gg3<-gg3+geom_line()
         }
         gg3<-gg3+xlab("Visit")+ylab("IFNg")
         gg3<-gg3+scale_color_discrete("Sample")
@@ -497,10 +497,10 @@ shinyServer(
         ### can change the ggplot to ggvis from here, for interactive ###
         gg4<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=factor(ID)))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
-          gg4<-gg4+geom_line(aes(group=factor(thisdata$ID)))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
+          gg4<-gg4+geom_line()+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
         else {
-          gg4<-gg4+geom_line(aes(group=factor(thisdata$ID)))
+          gg4<-gg4+geom_line()
         }
         gg4<-gg4+xlab("Visit")+ylab("IFNg")
         gg4<-gg4+scale_color_discrete("ID")
