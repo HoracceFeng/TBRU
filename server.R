@@ -268,7 +268,7 @@ shinyServer(
         heatmp1ex<-data.frame(heatmp1ex$ID,heatmp1ex$Sample,heatmp1ex$IFNg)
         colnames(heatmp1ex)<-c("ID","Sample","IFNg")
         heatmp1ex$ID<-factor(heatmp1ex$ID)
-        gg1<-ggplot(heatmp1ex,aes(y=heatmp1ex$ID,x=heatmp1ex$Sample,fill=heatmp1ex$IFNg));
+        gg1<-ggplot(heatmp1ex,aes(y=ID,x=Sample,fill=IFNg));
         gg1<-gg1 + geom_tile(color="white", size=0.1);
         gg1<-gg1 + scale_fill_gradientn(name="IFNg",colors = colkey1,breaks=breaks1,labels=format(breaks1));
         gg1<-gg1 + geom_text(aes(fill=heatmp1ex$IFNg,label=round(heatmp1ex$IFNg,0)),size=3);
@@ -301,7 +301,7 @@ shinyServer(
         heatmp2ex<-data.frame(heatmp2ex$ID,heatmp2ex$Sample,heatmp2ex$IFNg)
         colnames(heatmp2ex)<-c("ID","Sample","IFNg")
         heatmp2ex$ID<-factor(heatmp2ex$ID)
-        gg2<-ggplot(heatmp2ex,aes(y=heatmp2ex$ID,x=heatmp2ex$Sample,fill=heatmp2ex$IFNg))
+        gg2<-ggplot(heatmp2ex,aes(y=ID,x=Sample,fill=IFNg))
         gg2<-gg2 + geom_tile(color="white", size=0.1)
         gg2<-gg2 + scale_fill_gradientn(name="IFNg",colors = colkey1,breaks=breaks1,labels=format(breaks1))
         gg2<-gg2 + geom_text(aes(fill=heatmp2ex$IFNg,label=round(heatmp2ex$IFNg,0)))
@@ -463,7 +463,7 @@ shinyServer(
           thisdata<-rbind(thisdata,thisdata_piece)
         }
         ### can change the ggplot to ggvis from here, for interactive ###
-        gg3<-ggplot(data=thisdata,aes(x=thisdata$Visit,y=thisdata$IFNg,colour=thisdata$Sample))+geom_point()
+        gg3<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=Sample))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
           gg3<-gg3+geom_line(aes(group=thisdata$Sample))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
@@ -495,7 +495,7 @@ shinyServer(
           thisdata<-rbind(thisdata,thisdata_piece)
         }
         ### can change the ggplot to ggvis from here, for interactive ###
-        gg4<-ggplot(data=thisdata,aes(x=thisdata$Visit,y=thisdata$IFNg,colour=factor(thisdata$ID)))+geom_point()
+        gg4<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=factor(ID)))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
           gg4<-gg4+geom_line(aes(group=factor(thisdata$ID)))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
