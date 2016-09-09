@@ -1,5 +1,5 @@
 library(shiny)
-library(ggvis)
+#library(ggvis)
 library(dplyr)
 library(ggplot2)
 library(cowplot)
