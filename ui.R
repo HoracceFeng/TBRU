@@ -2,7 +2,7 @@
 ##### Install Package #####
 ###########################
 if (!require('shiny')) install.packages('shiny')
-if (!require('ggvis')) install.packages('ggvis')
+#if (!require('ggvis')) install.packages('ggvis')
 if (!require('dplyr')) install.packages('dplyr')
 if (!require('ggplot2')) install.packages('ggplot2')
 if (!require('cowplot')) install.packages('cowplot')
@@ -11,7 +11,7 @@ if (!require('DT')) install.packages('DT')
 if (!require('reshape2')) install.packages('reshape2')
 
 library(shiny)
-library(ggvis)
+#library(ggvis)
 library(dplyr)
 library(ggplot2)
 library(cowplot)
