@@ -377,8 +377,8 @@ shinyServer(
         layer_points()  %>%
         layer_lines()  %>%
         add_axis("x",value=c(levels(factor(data$Visit)))) %>%
-#        add_legend("stroke",title="Sample") %>%
-        hide_legend("stroke") %>%
+        add_legend("stroke",title="Sample") %>%
+#        hide_legend("stroke") %>%
         add_tooltip(vis_tooltip,"hover") 
     })
     vis2 %>% bind_shiny("plot2")
