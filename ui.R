@@ -54,7 +54,12 @@ shinyUI(
                                    h3("2. Method"),p(),
                                    h3("3. Result"),p(),
                                    h3("4. Improvement"),br(),
-                                   selectInput("dataset","Dataset:",dir("./data"))
+                                   h2("Dataset"),
+                                   h4("dataset0 : Test dataset, also use for testing TBRU app"),
+                                   h4("dataset2 : Real dataset, the first version"),
+                                   h4("dataset3 : Real dataset, the second version (latest)"),
+                                   selectInput("dataset","Dataset:",dir("./data")),
+                                   downloadButton('download_data','Download')
                                  ),
                                  mainPanel(
                                    tabsetPanel(
@@ -64,7 +69,7 @@ shinyUI(
                                               DT::dataTableOutput("rawdata")
                                      ),
                                      ## 1.2.1.2 --- Level ## -----------------------------------------------
-                                     tabPanel("Level",
+                                     tabPanel("Table",
                                               br(),       
                                               h4("Dilution vs. Visit"),
                                               tableOutput("tb_vis_dilu"),     
@@ -75,9 +80,11 @@ shinyUI(
                                      ## 1.2.1.3 --- Distribution ## ----------------------------------------
                                      tabPanel("Distribution",
                                               br(),
+                                              plotlyOutput("histo2"),
+                                              br(),br(),
                                               plotlyOutput("histo1")
                                      ),
-                                     ## 1.2.1.4 --- Valiability ## -----------------------------------------
+                                     ## 1.2.1.4 --- CV Analysis ## -----------------------------------------
                                      tabPanel("Valiability",
                                               h3("Box Plot"),
                                               sidebarPanel(
