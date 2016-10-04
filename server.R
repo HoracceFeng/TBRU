@@ -57,7 +57,7 @@ shinyServer(
     
     
     ######################################################
-    ########## Data Entry ##########
+    ########## Data Entry & Download ##########
     ######################################################
     data<-reactive({
       if (is.null(input$dataset)) {return()}
@@ -67,6 +67,11 @@ shinyServer(
              "dataset3.csv" = read.csv("./data/dataset3.csv")
       )
     })
+    
+    output$download_data<-downloadHandler(
+      filename = function() {paste0("./data/",input$dataset)},
+      content = function(file) {write.csv(data(),file)}
+    )
     
     ##################################################################
     ###################################
@@ -92,17 +97,23 @@ shinyServer(
     
     
     ##################################################################
-    ##  1.2.1.2 -- 1.2.1.3  DE - Summary - level & Distribution ##
+    ##  1.2.1.2 -- 1.2.1.3  DE - Summary - table & Distribution ##
     output$tb_vis_dilu<-renderTable(
       {
         data<-data()
-        table(data$Visit, data$Dilution)
+#        p<-table(data$Visit, data$Dilution)       ## original version, must work
+        p<-data.frame(data$Visit, data$Dilution)
+        names(p)=c("Visit","Dilution")
+        table(p)
       }
     )
     output$tb_sample<-renderTable(
       {
         data<-data()
-        table(data$Sample)
+#        table(data$Sample)    ## original version, must work.
+        Sample<-data.frame(data$Sample)   ## this line have risk, be careful
+        names(Sample)=c("Sample")
+        table(Sample)
       }
     )
     output$histo1<-renderPlotly(
@@ -111,13 +122,21 @@ shinyServer(
         mean.well = aggregate(IFNg ~ ID + Dilution+Sample+Visit, data, mean)
         cv.well = aggregate(IFNg ~ ID + Dilution+Sample+Visit, data, cv)
         histo1<-plot_ly(data=cv.well,x=cv.well$IFNg,type = "histogram",opacity=0.8)
-        histo1<-layout(histo1,xaxis=list(title="cv.well.IFNg"),yaxis=list(title="Frequency"))
+        histo1<-layout(histo1,xaxis=list(title="cross validation of IFNg"),yaxis=list(title="Frequency"))
 #        hist(cv.well$IFNg,10,main="Histogram of IFNg",xlab="IFNg after adjustment by cv.well",ylab="Frequency")
+      }
+    )
+    output$histo2<-renderPlotly(
+      {
+        data<-data()
+        mean.well = aggregate(IFNg ~ ID + Dilution+Sample+Visit, data, mean)
+        histo2<-plot_ly(data=mean.well,x=mean.well$IFNg,type = "histogram",opacity=0.8)
+        histo2<-layout(histo2,xaxis=list(title="IFNg"),yaxis=list(title="Frequency"))
       }
     )
     
     ##################################################################
-    ## 1.2.1.4  DE - Summary - Variability ##
+    ## 1.2.1.4  DE - Summary - CV analysis ##
     output$box1<-renderPlotly(
       {
         data<-data()
@@ -157,13 +176,17 @@ shinyServer(
         ## interactive boxplot ##
         if (input$box=="inter-1")
         {
-          inter1<-plot_ly(data=allcv1_m,x = allcv1_m$L1,y = allcv1_m$value,color = allcv1_m$L1,type = "box")
-          inter1<-layout(inter1,xaxis=xa,yaxis=ya)
+          inter1<-plot_ly(data=allcv1_m,x = allcv1_m$L1,y = allcv1_m$value,color = allcv1_m$L1,
+                          type = "box")
+          inter1<-layout(inter1,xaxis=xa,yaxis=ya,
+                         title="Cross Validation of IFNg (among well, ID or Visit)")   ## well = all
         }
         else if (input$box=="inter-2") 
         {
-          inter2<-plot_ly(data=allcv2_m,x = allcv2_m$L1,y = allcv2_m$value,color = allcv2_m$L1,type = "box")
-          inter2<-layout(inter2,xaxis=xa,yaxis=ya)
+          inter2<-plot_ly(data=allcv2_m,x = allcv2_m$L1,y = allcv2_m$value,color = allcv2_m$L1,
+                          type = "box")
+          inter2<-layout(inter2,xaxis=xa,yaxis=ya,
+                         title="Cross Validation of IFNg (among well, ID or Visit), Exclude Item with Mean 0")   ## well = all
         }
         else if (input$box=="inter-3")
         {
@@ -280,7 +303,7 @@ shinyServer(
       }
     )
     
-    ### Second One - usual ggplot ###
+    ### Second One - ggvis - update from usual ggplot ###
     output$ui_dilution_hmp2<-renderUI({
       data<-data()
       selectInput("dilution_hmp2","Dilution value:",levels(factor(data$Dilution)))
@@ -465,9 +488,11 @@ shinyServer(
         ### can change the ggplot to ggvis from here, for interactive ###
         gg3<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=Sample))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
+#          gg3<-gg3+geom_line(aes(group=thisdata$Sample))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
           gg3<-gg3+geom_line()+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
         else {
+#          gg3<-gg3+geom_line(aes(group=thisdata$Sample))
           gg3<-gg3+geom_line()
         }
         gg3<-gg3+xlab("Visit")+ylab("IFNg")
@@ -497,6 +522,7 @@ shinyServer(
         ### can change the ggplot to ggvis from here, for interactive ###
         gg4<-ggplot(data=thisdata,aes(x=Visit,y=IFNg,colour=factor(ID)))+geom_point()
         if (is.numeric(thisdata$Visit[1])) {
+#          gg4<-gg4+geom_line(aes(group=factor(thisdata$ID)))+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
           gg4<-gg4+geom_line()+scale_x_continuous(breaks = as.numeric(levels(factor(thisdata$Visit))))
         }
         else {
