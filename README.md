@@ -4,8 +4,8 @@ This is an interactive shiny app for showing the data and analysis of TBRU proje
 To learn this shiny app, just:
 1. make sure you have installed shiny package.
 2. run the code below:
-       library(shiny)
-       runGitHub("HoracceFeng/TBRU")
+       library(shiny)
+       runGitHub("HoracceFeng/TBRU")
        
 This side project may be updated later, but still not sure.       
 Thanks for watching. Any comment is welcome. 
